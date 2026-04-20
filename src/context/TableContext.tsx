@@ -17,7 +17,7 @@ interface TableContextType {
 const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export function TableProvider({ children }: { children: React.ReactNode }) {
-  const [selectedDatabase, setSelectedDatabase] = useState<string>("default");
+  const [selectedDatabase, setSelectedDatabase] = useState<string>("nfecorp");
   const [availableDatabases, setAvailableDatabases] = useState<any[]>([]);
   const [isLoadingDatabases, setIsLoadingDatabases] = useState<boolean>(true);
 
