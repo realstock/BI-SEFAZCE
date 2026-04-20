@@ -15,17 +15,17 @@ import { useTable } from "@/context/TableContext";
 type AnalysisTab = "valores" | "precos" | "consumo";
 
 export default function AnalisesPage() {
-  // Use context only for status, but analytics will be pinned to temp_combustivel schema
-  const { isLoadingTables } = useTable();
+  const { selectedTable, selectedDatabase, isLoadingTables } = useTable();
   const [activeTab, setActiveTab] = useState<AnalysisTab>("valores");
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState("avg_vlr");
 
-  // PINNED SETTINGS (based on user request)
-  const PINNED_DATABASE = "temp_combustivel";
-  const PINNED_TABLE = "combustivel";
+  const PINNED_DATABASE = selectedDatabase || "nfecorp";
+  const PINNED_TABLE = selectedTable || "combustivel";
+
+
 
   const tabs = [
     { id: "valores", label: "Valores Semanais", icon: BarChart3 },
@@ -53,6 +53,7 @@ export default function AnalisesPage() {
   };
 
   const fetchAnalysis = async () => {
+    if (!selectedDatabase || !selectedTable) return;
     setLoading(true);
     setError(null);
     try {
@@ -124,8 +125,10 @@ export default function AnalisesPage() {
   };
 
   useEffect(() => {
-    fetchAnalysis();
-  }, [activeTab]);
+    if (selectedDatabase && selectedTable) {
+      fetchAnalysis();
+    }
+  }, [activeTab, selectedDatabase, selectedTable]);
 
   const chartData = useMemo(() => {
     const weeks: Record<string, any> = {};
@@ -160,10 +163,10 @@ export default function AnalisesPage() {
           <div>
             <div className="flex items-center gap-2 text-emerald-500 mb-2">
               <Layers size={18} />
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-600">Base: temp_combustivel</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-emerald-600">Base: {PINNED_DATABASE}</span>
             </div>
             <h2 className="text-3xl font-bold tracking-tight mb-1">Análises Consolidadas</h2>
-            <p className="text-white/50 text-sm">Dashboards fixados na tabela técnica oficial da SEFAZ.</p>
+            <p className="text-white/50 text-sm">Dashboards fixados na tabela técnica selecionada ({PINNED_TABLE}).</p>
           </div>
           <button 
             onClick={fetchAnalysis}

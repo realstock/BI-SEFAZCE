@@ -32,13 +32,13 @@ function KpiCard({ title, value, icon: Icon, color, suffix = "" }: any) {
 }
 
 export default function Home() {
-  const { isLoadingTables } = useTable();
+  const { selectedTable, selectedDatabase, isLoadingTables } = useTable();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const PINNED_DATABASE = "temp_combustivel";
-  const PINNED_TABLE = "combustivel";
+  const PINNED_DATABASE = selectedDatabase || "nfecorp";
+  const PINNED_TABLE = selectedTable || "combustivel";
 
   const fetchOverviewData = async () => {
     setLoading(true);
@@ -76,8 +76,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchOverviewData();
-  }, []);
+    if (selectedDatabase && selectedTable) {
+      fetchOverviewData();
+    }
+  }, [selectedDatabase, selectedTable]);
 
   // Process data for charts
   const weeklyChartData = useMemo(() => {

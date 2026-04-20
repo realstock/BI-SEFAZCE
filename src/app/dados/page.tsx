@@ -10,8 +10,8 @@ export default function DadosPage() {
   const { selectedTable, selectedDatabase, isLoadingTables } = useTable();
   
   // PINNED SETTINGS
-  const PINNED_DATABASE = "temp_combustivel";
-  const PINNED_TABLE = "combustivel";
+  const PINNED_DATABASE = selectedDatabase || "nfecorp";
+  const PINNED_TABLE = selectedTable || "combustivel";
 
   // Table 1 State (Raw Data)
   const [data, setData] = useState<any[]>([]);
@@ -26,7 +26,7 @@ export default function DadosPage() {
   const [error2, setError2] = useState<string | null>(null);
 
   // Custom SQL Editor State
-  const [customSql, setCustomSql] = useState(`SELECT * FROM "temp_combustivel"."combustivel"\nLIMIT 50`);
+  const [customSql, setCustomSql] = useState(`SELECT * FROM "${selectedDatabase || 'nfecorp'}"."${selectedTable || 'combustivel'}"\nLIMIT 50`);
   const [customData, setCustomData] = useState<any[]>([]);
   const [loadingCustom, setLoadingCustom] = useState(false);
   const [errorCustom, setErrorCustom] = useState<string | null>(null);
@@ -130,10 +130,12 @@ export default function DadosPage() {
   };
 
   useEffect(() => {
-    setFilters({});
-    fetchData({});
-    fetchDetailData();
-  }, []);
+    if (selectedDatabase && selectedTable) {
+      setFilters({});
+      fetchData({});
+      fetchDetailData();
+    }
+  }, [selectedDatabase, selectedTable]);
 
   const handleFilterChange = (newFilters: Record<string, string>) => {
     setFilters(newFilters);
