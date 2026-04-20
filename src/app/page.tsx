@@ -37,8 +37,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const PINNED_DATABASE = selectedDatabase || "nfecorp";
-  const PINNED_TABLE = selectedTable || "combustivel";
+  const PINNED_DATABASE = "temp_combustivel";
+  const PINNED_TABLE = "combustivel";
 
   const fetchOverviewData = async () => {
     setLoading(true);
@@ -76,10 +76,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (selectedDatabase && selectedTable) {
-      fetchOverviewData();
-    }
-  }, [selectedDatabase, selectedTable]);
+    fetchOverviewData();
+  }, []);
 
   // Process data for charts
   const weeklyChartData = useMemo(() => {

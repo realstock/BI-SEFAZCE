@@ -22,8 +22,9 @@ export default function AnalisesPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState("avg_vlr");
 
-  const PINNED_DATABASE = selectedDatabase || "nfecorp";
-  const PINNED_TABLE = selectedTable || "combustivel";
+  // PINNED SETTINGS (based on user request)
+  const PINNED_DATABASE = "temp_combustivel";
+  const PINNED_TABLE = "combustivel";
 
 
 
@@ -53,7 +54,6 @@ export default function AnalisesPage() {
   };
 
   const fetchAnalysis = async () => {
-    if (!selectedDatabase || !selectedTable) return;
     setLoading(true);
     setError(null);
     try {
@@ -125,10 +125,8 @@ export default function AnalisesPage() {
   };
 
   useEffect(() => {
-    if (selectedDatabase && selectedTable) {
-      fetchAnalysis();
-    }
-  }, [activeTab, selectedDatabase, selectedTable]);
+    fetchAnalysis();
+  }, [activeTab]);
 
   const chartData = useMemo(() => {
     const weeks: Record<string, any> = {};
